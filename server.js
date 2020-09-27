@@ -14,13 +14,13 @@ app.use(morgan(morganSetting));
 app.use(helmet());
 app.use(cors());
 app.use(function validateBearer(req, res, next) {
-  const authVal = req.get("Authorization") || "";
+  const bearerToken = req.get("Authorization") || "";
 
-  if (!authVal.toLowerCase().startsWith("bearer")) {
+  if (!bearerToken.toLowerCase().startsWith("bearer")) {
     return res.status(401).json({ message: "Missing Bearer Header" });
   }
-  const token = authVal.split(" ")[1];
-  if (token !== API_TOKEN) {
+  const apiToken = bearerToken.split(" ")[1];
+  if (apiToken !== API_TOKEN) {
     return res.status(401).json({ message: "Unauthorized request" }); //Invalid Token
   }
   next();
