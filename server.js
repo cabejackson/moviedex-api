@@ -15,7 +15,7 @@ app.use(helmet());
 app.use(cors());
 app.use(function validateBearer(req, res, next) {
   const bearerToken = req.get("Authorization") || "";
-
+  //checks for bearer header & checks that the apitoken given is correct
   if (!bearerToken.toLowerCase().startsWith("bearer")) {
     return res.status(401).json({ message: "Missing Bearer Header" });
   }
@@ -25,6 +25,7 @@ app.use(function validateBearer(req, res, next) {
   }
   next();
 });
+//throws a service error
 app.use((error, req, res, next) => {
   let response;
   if (process.env.NODE_ENV === "production") {
@@ -35,6 +36,7 @@ app.use((error, req, res, next) => {
   res.status(500).json(response);
 });
 
+//generates the movie array
 function handleTypes(req, res, next) {
   const { genre, country, avg_vote } = req.query;
   let results = [...movieData];
@@ -59,6 +61,7 @@ function handleTypes(req, res, next) {
   next();
 }
 
+//sets up the path to show the movie array from the func above
 app.get("/movie", handleTypes);
 
 const PORT = process.env.PORT || 8080;
